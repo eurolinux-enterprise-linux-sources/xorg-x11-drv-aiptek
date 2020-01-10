@@ -1,0 +1,37 @@
+From 7f3cf41b3ea38246dd210183709b8a22c87aa692 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Wed, 22 Aug 2012 13:40:00 +1000
+Subject: [PATCH] Use signal-safe logging if available
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/xf86Aiptek.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/src/xf86Aiptek.c b/src/xf86Aiptek.c
+index 7368602..df92063 100644
+--- a/src/xf86Aiptek.c
++++ b/src/xf86Aiptek.c
+@@ -128,6 +128,10 @@
+ #error "Need a server with input ABI 12"
+ #endif
+ 
++#if GET_ABI_MAJOR(ABI_XINPUT_VERSION) < 18
++#define LogMessageVerbSigSafe xf86MsgVerb
++#endif
++
+ static InputDriverPtr aiptekDrv;
+ static int debug_level = INI_DEBUG_LEVEL;
+ 
+@@ -374,7 +378,7 @@ xf86AiptekHIDReadInput(InputInfoPtr pInfo)
+ 
+     if (len <= 0)
+     {
+-        xf86Msg(X_ERROR, "Error reading Aiptek tablet: %s\n", strerror(errno));
++        LogMessageVerbSigSafe(X_ERROR, -1, "Error reading Aiptek tablet: %s\n", strerror(errno));
+         return;
+     }
+ 
+-- 
+1.7.11.2
+

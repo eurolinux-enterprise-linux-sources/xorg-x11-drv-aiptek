@@ -5,7 +5,7 @@
 Summary:   Xorg X11 aiptek input driver
 Name:      xorg-x11-drv-aiptek
 Version:   1.4.1
-Release:   2%{?dist}
+Release:   4%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -15,6 +15,7 @@ Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
 Patch01:   0001-If-xf86AiptekHIDOpen-failed-in-PreInit-assume-failur.patch
 Patch02:   0001-Don-t-free-anything-on-PreInit-failure-let-the-serve.patch
 Patch03:   0001-Always-reset-the-fd-if-auto-probing-fails.patch
+Patch04:   0001-Use-signal-safe-logging-if-available.patch
 
 ExcludeArch: s390 s390x
 
@@ -32,6 +33,7 @@ X.Org X11 aiptek input driver.
 %patch01 -p1
 %patch02 -p1
 %patch03 -p1
+%patch04 -p1
 
 %build
 %configure --disable-static
@@ -55,6 +57,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/aiptek.4*
 
 %changelog
+* Wed Aug 22 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.4.1-4
+- Use signal safe logging if available
+
+* Wed Aug 01 2012 Peter Hutterer <peter.hutterer@redhat.com> 1.4.1-3
+- Rebuild for server 1.13 (#835215)
+
 * Tue Jul 19 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.1-2
 - Fix crashes on failed PreInit
 
