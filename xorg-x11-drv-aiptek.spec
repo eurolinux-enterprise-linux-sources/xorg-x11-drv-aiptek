@@ -5,7 +5,7 @@
 Summary:   Xorg X11 aiptek input driver
 Name:      xorg-x11-drv-aiptek
 Version:   1.4.1
-Release:   5%{?dist}
+Release:   6%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
@@ -57,6 +57,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/aiptek.4*
 
 %changelog
+* Wed Nov 11 2015 Adam Jackson <ajax@redhat.com> - 1.4.1-6
+- Rebuild for server 1.17
+
 * Wed Apr 23 2014 Adam Jackson <ajax@redhat.com> 1.4.1-5
 - Rebuild for server 1.15
 
