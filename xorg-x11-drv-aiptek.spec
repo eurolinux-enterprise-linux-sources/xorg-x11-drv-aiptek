@@ -4,27 +4,34 @@
 
 Summary:   Xorg X11 aiptek input driver
 Name:      xorg-x11-drv-aiptek
-Version: 1.3.0
-Release: 2%{?dist}
+Version:   1.4.1
+Release:   2%{?dist}
 URL:       http://www.x.org
 License:   MIT
 Group:     User Interface/X Hardware Support
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Source0:   ftp://ftp.x.org/pub/individual/driver/%{tarball}-%{version}.tar.bz2
+Patch01:   0001-If-xf86AiptekHIDOpen-failed-in-PreInit-assume-failur.patch
+Patch02:   0001-Don-t-free-anything-on-PreInit-failure-let-the-serve.patch
+Patch03:   0001-Always-reset-the-fd-if-auto-probing-fails.patch
 
 ExcludeArch: s390 s390x
 
 BuildRequires: xorg-x11-server-sdk >= 1.3.0.0-6
 BuildRequires: xorg-x11-util-macros >= 1.3.0
 
-Requires:  xorg-x11-server-Xorg >= 1.3.0.0-6
+Requires:  Xorg %(xserver-sdk-abi-requires ansic)
+Requires:  Xorg %(xserver-sdk-abi-requires xinput)
 
 %description 
 X.Org X11 aiptek input driver.
 
 %prep
 %setup -q -n %{tarball}-%{version}
+%patch01 -p1
+%patch02 -p1
+%patch03 -p1
 
 %build
 %configure --disable-static
@@ -48,6 +55,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man4/aiptek.4*
 
 %changelog
+* Tue Jul 19 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.1-2
+- Fix crashes on failed PreInit
+
+* Wed Jun 29 2011 Peter Hutterer <peter.hutterer@redhat.com> 1.4.1-1
+- aiptek 1.4.1 (#713778)
+
 * Wed Jan 06 2010 Peter Hutterer <peter.hutterer@redhat.com> 1.3.0-2
 - Use global instead of define per Packaging Guidelines.
 

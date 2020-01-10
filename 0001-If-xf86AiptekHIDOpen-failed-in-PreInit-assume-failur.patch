@@ -1,0 +1,29 @@
+From dd4749fe10cbb2c6ead5a13081b00d4599df86d2 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Tue, 19 Jul 2011 10:16:52 +1000
+Subject: [PATCH] If xf86AiptekHIDOpen failed in PreInit, assume failure
+
+Invalid device files should fail the driver's init.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/xf86Aiptek.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/src/xf86Aiptek.c b/src/xf86Aiptek.c
+index 38e7d81..5f03173 100644
+--- a/src/xf86Aiptek.c
++++ b/src/xf86Aiptek.c
+@@ -1916,7 +1916,8 @@ xf86AiptekInit(InputDriverPtr    drv,
+      */
+     if ( shared == 0)
+     {
+-        xf86AiptekHIDOpen(pInfo);
++        if (xf86AiptekHIDOpen(pInfo) != Success)
++            goto SetupProc_fail;
+         close(pInfo->fd);
+         pInfo->fd=-1;
+     }
+-- 
+1.7.6
+

@@ -34,14 +34,15 @@
  * TORTIOUS ACTIONS, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
-/* $XdotOrg: driver/xf86-input-aiptek/src/xf86Aiptek.h,v 1.4 2005/07/13 02:18:12 kem Exp $ */
-/* $XFree86: xc/programs/Xserver/hw/xfree86/input/aiptek/xf86Aiptek.h,v 1.2 2003/11/03 05:36:32 tsi Exp $ */
 
 #ifndef _AIPTEK_H_
 #define _AIPTEK_H_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#ifdef LINUX_INPUT
+#ifdef HAVE_LINUX_INPUT_H
 #   include <asm/types.h>
 #   include <linux/input.h>
 #   ifndef EV_MSC
@@ -56,12 +57,8 @@
 #   endif
 #endif
 
+#include <xorg-server.h>
 #include <xorgVersion.h>
-
-#ifndef XFree86LOADER
-#   include <unistd.h>
-#   include <errno.h>
-#endif
 
 #include <misc.h>
 #include <xf86.h>
@@ -76,17 +73,7 @@
 #include <X11/keysym.h>
 #include <mipointer.h>
 
-#ifdef XFree86LOADER
-#   include <xf86Module.h>
-#endif
-
-#define XCONFIG_PROBED "(==)"
-#define XCONFIG_GIVEN  "(**)"
-
-#define xf86Verbose 1
-
-#undef PRIVATE
-#define PRIVATE(x) XI_PRIVATE(x)
+#include <xf86Module.h>
 
 #define CURSOR_SECTION_NAME "AiptekCursor"
 #define STYLUS_SECTION_NAME "AiptekStylus"
@@ -131,9 +118,9 @@
 
 #define DEBUG 1
 #if DEBUG
-#   define     DBG(lvl, f)     {if ((lvl) <= debug_level) f;}
+#   define     DBG(lvl, ...)     {if ((lvl) <= debug_level) xf86Msg(X_INFO, __VA_ARGS__);}
 #else
-#   define     DBG(lvl, f)
+#   define     DBG(lvl, ...)
 #endif
 
 /******************************************************************************
@@ -355,17 +342,17 @@ typedef struct _AiptekCommonRec
     unsigned char   data[9];        /* data read on the device */
 
     int             numDevices;     /* number of tablet */
-    LocalDevicePtr* deviceArray;    /* array of tablets sharing the device */
+    InputInfoPtr* deviceArray;    /* array of tablets sharing the device */
 
-    Bool (*open)(LocalDevicePtr);   /* function to open (serial or USB) */
+    Bool (*open)(InputInfoPtr);   /* function to open (serial or USB) */
 } AiptekCommonRec, *AiptekCommonPtr;
 
-static InputInfoPtr xf86AiptekInit(InputDriverPtr, IDevPtr, int);
-static void xf86AiptekUninit(InputDriverPtr, LocalDevicePtr, int);
-static void xf86AiptekClose(LocalDevicePtr);
-static LocalDevicePtr xf86AiptekAllocateStylus(void);
-static LocalDevicePtr xf86AiptekAllocateCursor(void);
-static LocalDevicePtr xf86AiptekAllocateEraser(void);
+static int xf86AiptekInit(InputDriverPtr, InputInfoPtr, int);
+static void xf86AiptekUninit(InputDriverPtr, InputInfoPtr, int);
+static void xf86AiptekClose(InputInfoPtr);
+static int xf86AiptekAllocateStylus(InputInfoPtr);
+static int xf86AiptekAllocateCursor(InputInfoPtr);
+static int xf86AiptekAllocateEraser(InputInfoPtr);
 
 #define SYSCALL(call) while(((call) == -1) && (errno == EINTR))
 #define ABS(x) ((x) > 0 ? (x) : -(x))

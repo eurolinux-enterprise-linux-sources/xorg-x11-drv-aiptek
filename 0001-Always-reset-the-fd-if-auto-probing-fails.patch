@@ -1,0 +1,25 @@
+From d94a08d344e2be818edbc58a2f03fb5041e44158 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Tue, 19 Jul 2011 15:35:28 +1000
+Subject: [PATCH] Always reset the fd if auto-probing fails.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/xf86Aiptek.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/src/xf86Aiptek.c b/src/xf86Aiptek.c
+index 419c6a1..7368602 100644
+--- a/src/xf86Aiptek.c
++++ b/src/xf86Aiptek.c
+@@ -926,6 +926,7 @@ xf86AiptekHIDOpen(InputInfoPtr pInfo)
+     {
+         xf86Msg(X_ERROR, "xf86AiptekHIDOpen ERROR: %d\n", err);
+         SYSCALL(close(pInfo->fd));
++        pInfo->fd = -1;
+         return !Success;
+     }
+ 
+-- 
+1.7.6
+

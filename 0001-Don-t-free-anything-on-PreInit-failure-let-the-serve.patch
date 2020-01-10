@@ -1,0 +1,33 @@
+From c28252b79f7bf9f89f2dee940838570a46f7d9c0 Mon Sep 17 00:00:00 2001
+From: Peter Hutterer <peter.hutterer@who-t.net>
+Date: Tue, 19 Jul 2011 10:25:18 +1000
+Subject: [PATCH] Don't free anything on PreInit failure, let the server
+ handle it
+
+The server calls Uninit if PreInit returns an error.
+
+Signed-off-by: Peter Hutterer <peter.hutterer@who-t.net>
+---
+ src/xf86Aiptek.c |    6 ------
+ 1 files changed, 0 insertions(+), 6 deletions(-)
+
+diff --git a/src/xf86Aiptek.c b/src/xf86Aiptek.c
+index 5f03173..419c6a1 100644
+--- a/src/xf86Aiptek.c
++++ b/src/xf86Aiptek.c
+@@ -2220,12 +2220,6 @@ xf86AiptekInit(InputDriverPtr    drv,
+     return Success;
+ 
+ SetupProc_fail:
+-    if (common)
+-        free(common);
+-    if (device)
+-        free(device);
+-    if (pInfo)
+-        free(pInfo);
+     return BadValue;
+ }
+ 
+-- 
+1.7.6
+
